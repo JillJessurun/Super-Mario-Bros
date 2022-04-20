@@ -5,6 +5,10 @@ public class Handler {
 
     LinkedList<GameObject> object = new LinkedList<GameObject>();
 
+    //jumping variables for keyinput class
+    public boolean jump = false;
+    public boolean down = false;
+
     public void tick(){
         for (int i = 0; i < object.size(); i++) {
             GameObject tempObject = object.get(i);

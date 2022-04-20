@@ -1,19 +1,65 @@
+/*
+author: Jill Jessurun
+date: 4-20 :) 2022
+goal: super mario bros clone
+
+ideas:
+- grab the stars each level, then an arrow appears bottom right (walk to the right to go to next level)
+- different characters (luigi, yoshi, bowser, etc.)
+- audio
+- working tubes
+ */
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Game extends Canvas implements Runnable{
 
+    //variables
     public static final int WIDTH = 1800;
     public static final int HEIGHT = 1000;
     private Thread thread;
     private boolean running = true;
+    public boolean dead = false;
 
     //instances
     private Handler handler;
     private HUD hud;
+    private BufferedImageLoader loader;
+    private KeyInput keyInput;
+
+    //background game
+    private BufferedImage background;
+    public static BufferedImage image;
+
+    //goomba
+    private BufferedImage goomba;
+    public static BufferedImage image2;
+
+    //mario
+    private BufferedImage mario;
+    public static BufferedImage image3;
 
     //constructor
-    public Game(){
+    public Game() throws IOException {
+        loader = new BufferedImageLoader();
+
+        //background
+        image = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\background.jpg");
+        image2 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\goomba.gif");
+        image3 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\mario.png");
+        Image image = new Image(Game.image);
+        Image image2 = new Image(Game.image2);
+        Image image3 = new Image(Game.image3);
+        background = image.grabImage();
+        goomba = image2.grabImage();
+        mario = image3.grabImage();
+
+        //resize images
+        background = image.resizeImage(background, 1800, 1000);
+
         handler = new Handler();
         new Window(WIDTH, HEIGHT, "Super Mario Bros", this);
 
@@ -22,9 +68,11 @@ public class Game extends Canvas implements Runnable{
 
         hud = new HUD();
 
+        keyInput = new KeyInput(handler);
+
         //adding objects at startup program
-        handler.addObject(new Player(WIDTH/2-32, HEIGHT/2-32, ID.Player, handler));
-        handler.addObject(new Enemy(300, 300, ID.Enemy, handler));
+        handler.addObject(new Player(70, 743, ID.Player, handler, mario, keyInput, this));
+        handler.addObject(new Goomba(1200, 790, ID.Enemy, handler, goomba));
     }
 
     public synchronized void start(){
@@ -55,12 +103,19 @@ public class Game extends Canvas implements Runnable{
 
         Graphics g = bs.getDrawGraphics();
 
-        //backgroundcolour
-        g.setColor(Color.black);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        //background
+        g.drawImage(background, 0, 0, null);
 
         handler.render(g);
         hud.render(g);
+
+        //game over
+        if (dead){
+            Font font = new Font("Comic Sans MS", Font.BOLD, 150);
+            g.setColor(Color.red);
+            g.setFont(font);
+            g.drawString("Game Over", 500, 400);
+        }
 
         g.dispose();
         bs.show();
@@ -107,7 +162,7 @@ public class Game extends Canvas implements Runnable{
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Game();
     }
 

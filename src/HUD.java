@@ -9,7 +9,7 @@ public class HUD {
     }
 
     public void render(Graphics g){
-        g.setColor(Color.gray);
-        g.fillRect(15, 15, 200, 50);
+        //g.setColor(Color.gray);
+        //g.fillRect(15, 15, 200, 50);
     }
 }
