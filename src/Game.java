@@ -42,6 +42,10 @@ public class Game extends Canvas implements Runnable{
     private BufferedImage mario;
     public static BufferedImage image3;
 
+    //bricks
+    private BufferedImage bricks;
+    public static BufferedImage image4;
+
     //constructor
     public Game() throws IOException {
         loader = new BufferedImageLoader();
@@ -50,12 +54,15 @@ public class Game extends Canvas implements Runnable{
         image = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\background.jpg");
         image2 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\goomba.gif");
         image3 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\mario.png");
+        image4 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\bricks.png");
         Image image = new Image(Game.image);
         Image image2 = new Image(Game.image2);
         Image image3 = new Image(Game.image3);
+        Image image4 = new Image(Game.image4);
         background = image.grabImage();
         goomba = image2.grabImage();
         mario = image3.grabImage();
+        bricks = image4.grabImage();
 
         //resize images
         background = image.resizeImage(background, 1800, 1000);
@@ -73,6 +80,7 @@ public class Game extends Canvas implements Runnable{
         //adding objects at startup program
         handler.addObject(new Player(70, 743, ID.Player, handler, mario, keyInput, this));
         handler.addObject(new Goomba(1200, 790, ID.Enemy, handler, goomba));
+        handler.addObject(new Bricks(1500, 600, ID.Brick, bricks));
     }
 
     public synchronized void start(){
