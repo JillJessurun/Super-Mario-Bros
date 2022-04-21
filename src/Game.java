@@ -18,11 +18,12 @@ import java.io.IOException;
 public class Game extends Canvas implements Runnable{
 
     //variables
-    public static final int WIDTH = 1800;
-    public static final int HEIGHT = 1000;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 700;
     private Thread thread;
     private boolean running = true;
     public boolean dead = false;
+    public boolean gameStarted = false;
 
     //instances
     private Handler handler;
@@ -46,6 +47,10 @@ public class Game extends Canvas implements Runnable{
     private BufferedImage bricks;
     public static BufferedImage image4;
 
+    //star
+    private BufferedImage star;
+    public static BufferedImage image5;
+
     //constructor
     public Game() throws IOException {
         loader = new BufferedImageLoader();
@@ -55,17 +60,20 @@ public class Game extends Canvas implements Runnable{
         image2 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\goomba.gif");
         image3 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\mario.png");
         image4 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\bricks.png");
+        image5 = loader.loadImage("C:\\Users\\pc\\IdeaProjects\\Super-Mario-Bros\\src\\Images\\star.png");
         Image image = new Image(Game.image);
         Image image2 = new Image(Game.image2);
         Image image3 = new Image(Game.image3);
         Image image4 = new Image(Game.image4);
+        Image image5 = new Image(Game.image5);
         background = image.grabImage();
         goomba = image2.grabImage();
         mario = image3.grabImage();
         bricks = image4.grabImage();
+        star = image5.grabImage();
 
-        //resize images
-        background = image.resizeImage(background, 1800, 1000);
+        //resize background
+        background = image.resizeImage(background, 1200, 700);
 
         handler = new Handler();
         new Window(WIDTH, HEIGHT, "Super Mario Bros", this);
@@ -78,9 +86,13 @@ public class Game extends Canvas implements Runnable{
         keyInput = new KeyInput(handler);
 
         //adding objects at startup program
-        handler.addObject(new Player(70, 743, ID.Player, handler, mario, keyInput, this));
-        handler.addObject(new Goomba(1200, 790, ID.Enemy, handler, goomba));
-        handler.addObject(new Bricks(1500, 600, ID.Brick, bricks));
+        handler.addObject(new Goomba(800, 540, ID.Enemy, handler, goomba));
+        handler.addObject(new Bricks(600, 400, ID.Brick, bricks));
+        handler.addObject(new Bricks2(260, 210, ID.Brick2, bricks));
+        handler.addObject(new Star(660, 10, ID.Star, star));
+        handler.addObject(new Player(70, 500, ID.Player, handler, mario, keyInput, this, hud));
+
+        gameStarted = true;
     }
 
     public synchronized void start(){
@@ -98,8 +110,10 @@ public class Game extends Canvas implements Runnable{
     }
 
     public void tick(){
-        handler.tick();
-        hud.tick();
+        if (gameStarted) {
+            handler.tick();
+            hud.tick();
+        }
     }
 
     public void render(){
@@ -119,10 +133,10 @@ public class Game extends Canvas implements Runnable{
 
         //game over
         if (dead){
-            Font font = new Font("Comic Sans MS", Font.BOLD, 150);
+            Font font = new Font("Comic Sans MS", Font.BOLD, 100);
             g.setColor(Color.red);
             g.setFont(font);
-            g.drawString("Game Over", 500, 400);
+            g.drawString("Game Over", 340, 360);
         }
 
         g.dispose();

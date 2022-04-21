@@ -2,14 +2,16 @@ import java.awt.*;
 
 public class HUD {
 
-    public static int HEALTH = 100;
+    public int STARS = 0;
 
     public void tick(){
 
     }
 
     public void render(Graphics g){
-        //g.setColor(Color.gray);
-        //g.fillRect(15, 15, 200, 50);
+        Font font = new Font("Times New Roman", Font.BOLD, 20);
+        g.setColor(Color.YELLOW);
+        g.setFont(font);
+        g.drawString("Star Count: " + STARS, 10, 30);
     }
 }

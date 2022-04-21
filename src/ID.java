@@ -1,5 +1,7 @@
 public enum ID {
     Player(),
     Enemy(),
-    Brick()
+    Brick(),
+    Brick2(),
+    Star()
 }

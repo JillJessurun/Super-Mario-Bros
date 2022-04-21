@@ -8,17 +8,21 @@ public class Player extends GameObject{
     private KeyInput keyInput;
     private Game game;
     private Bricks brick;
+    private Bricks2 brick2;
+    private HUD hud;
 
-    private final int jumpHeight = 660; //smaller number = higher jump
+    private int jumpHeight = 450; //smaller number = higher jump
     private int jumpIncrease = 0;
-    private boolean jumpHeightReached = false;
+    //private boolean jumpHeightReached = false;
+    //private boolean jumpingUp = false;
 
-    public Player(float x, float y, ID id, Handler handler, BufferedImage mario, KeyInput keyInput, Game game) {
+    public Player(float x, float y, ID id, Handler handler, BufferedImage mario, KeyInput keyInput, Game game, HUD hud) {
         super(x, y, id);
         this.handler = handler;
         this.mario = mario;
         this.keyInput = keyInput;
         this.game = game;
+        this.hud = hud;
     }
 
     private void collision(){
@@ -34,24 +38,56 @@ public class Player extends GameObject{
                 //brick collision
                 }else if (tempObject.getId() == ID.Brick) {
                     brick = (Bricks) tempObject;
-                    if (getBounds().intersects(tempObject.getBounds())) {
-                        //collision code (under here happens when colliding)
 
-                        /*
-                        if (y < 660 && y > 610) {
-                            jumpHeightReached = true;
-                            y = 655; //height low side bricks
+                    //go on top of brick
+                    if (getBounds().intersects(brick.getBounds())) {
+                        //collision code (under here happens when colliding)
+                        if(handler.jumpingUp) {
+                            System.out.println("jumping on brick");
+                            jumpHeight = 250;
+                            handler.jump = true;
                         }else{
-                            y = tempObject.y - getBounds().height; //mario on top of bricks
-                            jumpHeightReached = false;
-                            handler.jump = false;
+                            y = brick.y - getBounds().height;
                             jumpIncrease = 0;
                         }
+                    }
 
-                         */
+                    //when hitting the low side of the brick, stay under the brick
+                    if (getBounds().intersects(brick.getBoundsLow())) {
+                        y = brick.y + 55;
+                        handler.jumpHeightReached = true;
+                        jumpIncrease = 0;
+                    }
 
-                        //y = tempObject.y - getBounds().height;
+                //brick 2 collision
+                }else if (tempObject.getId() == ID.Brick2){
+                    brick2 = (Bricks2) tempObject;
 
+                    //go on top of brick 2
+                    if (getBounds().intersects(brick2.getBounds())) {
+                        //collision code (under here happens when colliding)
+                        if(handler.jumpingUp) {
+                            System.out.println("jumping on brick");
+                            jumpHeight = 70;
+                            handler.jump = true;
+                        }else{
+                            y = brick2.y - getBounds().height;
+                            jumpIncrease = 0;
+                        }
+                    }
+
+                    //when hitting the low side of the brick, stay under the brick
+                    if (getBounds().intersects(brick2.getBoundsLow())) {
+                        y = brick2.y + 55;
+                        handler.jumpHeightReached = true;
+                        jumpIncrease = 0;
+                    }
+
+                //star collision
+                }else if (tempObject.getId() == ID.Star){
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        handler.removeObject(tempObject);
+                        hud.STARS++;
                     }
                 }
             }
@@ -71,51 +107,39 @@ public class Player extends GameObject{
         //jump
         if(handler.jump){
             //going up
-            if (!jumpHeightReached) {
+            if (!handler.jumpHeightReached) {
+                handler.jumpingUp = true;
                 //jump till given height
                 if (y >= jumpHeight) {
                     jumpIncrease = jumpIncrease - 3;
                 }else {
-                    jumpHeightReached = true;
-                }
-
-                //jumping against the brick from below, stay under brick
-                if (getBounds().intersects(brick.getBoundsLow())) {
-                    y = 654;
-                    jumpHeightReached = false;
+                    handler.jumpHeightReached = true;
                 }
             }
 
             //going down
-            if (jumpHeightReached) {
-                //jumping on the brick
-                if (getBounds().intersects(brick.getBounds())) {
-                    y = brick.y - getBounds().height; //mario on top of bricks
-                    jumpHeightReached = false;
+            if (handler.jumpHeightReached) {
+                handler.jumpingUp = false;
+                //hold s
+                if (handler.down) {
+                    jumpIncrease = jumpIncrease + 2;
+                }
+
+                if (y <= 500) {
+                    jumpIncrease++;
+                    //resetting stats
+                } else {
+
+                    //when jumped off brick, reset jumpheight
+                    if (!getBounds().intersects(brick.getBounds())) {
+                        jumpHeight = 450;
+                    }
+
+                    y = 500;
+                    handler.jumpHeightReached = false;
                     handler.jump = false;
                     jumpIncrease = 0;
-                }else{
-                    //hold s
-                    if (handler.down) {
-                        jumpIncrease = jumpIncrease + 2;
-                    }
-
-                    if (y <= 743) {
-                        jumpIncrease++;
-                        //resetting stats
-                    } else {
-                        y = 743;
-                        jumpHeightReached = false;
-                        handler.jump = false;
-                        jumpIncrease = 0;
-                    }
                 }
-            }
-
-        }else{
-            //when not on a brick, always stay on ground
-            if (x < 1440 || x > 1664){
-                y = 743;
             }
         }
     }

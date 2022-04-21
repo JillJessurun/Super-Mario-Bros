@@ -1,11 +1,10 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Bricks extends GameObject{
-
+public class Bricks2 extends GameObject{
     private BufferedImage bricks;
 
-    public Bricks(float x, float y, ID id, BufferedImage bricks) {
+    public Bricks2(float x, float y, ID id, BufferedImage bricks) {
         super(x, y, id);
         this.bricks = bricks;
         lowX = getBounds().x;

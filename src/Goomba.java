@@ -6,7 +6,6 @@ public class Goomba extends GameObject{
     private Handler handler;
 
     private BufferedImage goomba;
-    public static BufferedImage image;
 
     public Goomba(float x, float y, ID id, Handler handler, BufferedImage goomba) {
         super(x, y, id);
@@ -38,7 +37,7 @@ public class Goomba extends GameObject{
         g.drawImage(goomba, (int)x, (int)y, null);
 
         //draw bounds
-        //g.setColor(Color.red);
+        g.setColor(Color.red);
         //g.drawRect(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
     }
 }

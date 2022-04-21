@@ -26,6 +26,8 @@ public class KeyInput extends KeyAdapter {
                     //tempObject.setVelY(5); keyDown[0] = true;
                     keyDown[0] = true;
                     handler.jump = true;
+                    handler.jumpHeightReached = false;
+                    handler.jumpingUp = true;
                 }
                 if (key == KeyEvent.VK_S) {handler.down = true; keyDown[1] = true;}
                 if (key == KeyEvent.VK_A) {tempObject.setVelX(-5); keyDown[2] = true;}

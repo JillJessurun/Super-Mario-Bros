@@ -8,6 +8,8 @@ public class Handler {
     //jumping variables for keyinput class
     public boolean jump = false;
     public boolean down = false;
+    public boolean jumpHeightReached = false;
+    public boolean jumpingUp = false;
 
     public void tick(){
         for (int i = 0; i < object.size(); i++) {
